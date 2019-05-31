@@ -12,12 +12,18 @@ import time
 import multiprocessing as mp
 import argparse
 
+
+# read in command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument('output_file')
+args = parser.parse_args()
+
 # global variables
 # ----------------
 
 URL = "https://www.bbc.com/"
 var = "food/cuisines"
-main_page_req = urlopenURL + var)
+main_page_req = urlopen(URL + var)
 soup = BeautifulSoup(main_page_req, 'html.parser')
 
 # create list of names of all cuisines listed on BBC.com website
@@ -95,15 +101,13 @@ def parallelize_search(region):
     return df
 
 def main():
-    # initialize a list to apply the pool function to
-    rows = list(range(0, df.shape[0]))
 
     # create a  pool for parallel processing
     pool = mp.Pool(mp.cpu_count())
     results = pool.map(parallelize_search, regions)
     pool.close()
     pool.join()
-
+    
     # combine the results returned from parallelize_search
     results_df = pd.concat(results)
 
