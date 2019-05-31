@@ -31,8 +31,7 @@ regions = []
 for cuisine in soup.find_all('h3'):
     regions.append(cuisine.text.lower().replace(" ", "_").replace("_recipes", ""))
 
-# dataframe to be built with all scraped dataset
-
+# dataframe to be built with scraped recipe dataset
 df = pd.DataFrame()
 
 def parallelize_search(region):
@@ -107,11 +106,11 @@ def main():
     results = pool.map(parallelize_search, regions)
     pool.close()
     pool.join()
-    
+
     # combine the results returned from parallelize_search
     results_df = pd.concat(results)
 
     # write the df to a csv saved at the output arg
-    results_df.to_csv(args.output_file)
+    results_df.to_csv(args.output_file, index = False)
 
 main()
